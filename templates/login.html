@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Sign In</h1>
+  <form method="POST" action="" novalidate>
+    {{ form.csrf_token }}
+    <div class="row">
+      <div class="form-group col-lg-2">
+        <label>{{ form.username.label }}</label>
+        {% if form.username.errors %}
+        {{ form.username(size=20, class="form-control is-invalid")}}
+        {% for error in form.username.errors %}
+        <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
+        {% else %}
+        {{ form.username(size=20, class="form-control")}}
+        {% endif %}
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-lg-2">
+        <label>{{ form.password.label }}</label>
+        {% if form.password.errors %}
+        {{ form.password(size=20, class="form-control is-invalid")}}
+        {% for error in form.password.errors %}
+        <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
+        {% else %}
+        {{ form.password(size=20, class="form-control")}}
+        {% endif %}
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-lg-2">
+        <label for="code">{{ form.remember_me.label }}</label> {{ form.remember_me(size=20, class="form-check-input") }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-lg-2">
+        {{ form.submit(size=20, class="btn btn-primary") }}
+      </div>
+    </div>
+  </form>
+
+
+{% endblock %}

@@ -19,17 +19,32 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href={{ url_for("index") }}>Home</a>
-            </li>
-            <li class="nav-item">
+            <!--<li class="nav-item">
+              {% if current_user.is_anonymous %}
               <a class="nav-link active" aria-current="page" href={{ url_for("login") }}>Login</a>
+              {% else %}
+              <a class="nav-link active" aria-current="page" href={{ url_for("logout") }}>Logout</a>
+              {% endif %}
+            </li>-->
+            <li class="nav-item">
+              <a class="nav-link" href="#">Explore</a>
             </li>
           </ul>
+          <!--
           <form class="d-flex" role="search">
             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-primary" type="submit">Search</button>
-          </form>
+          </form>-->
+          <div class="dropdown">
+            <button class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+              <img src="https://api.dicebear.com/6.x/identicon/svg?seed={{ current_user.username }}&size=32">
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="#">Profile</a></li>
+              <li><a class="dropdown-item" href="logout">Logout</a></li>
+            </ul>
+          </div>
+
         </div>
       </div>
     </nav>

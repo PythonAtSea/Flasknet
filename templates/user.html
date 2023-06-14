@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<table>
+  <tr valign="top">
+      <td><img src={{ user.avatar() }} style="position: relative; top: 11px; align-self: start"></td>
+      <td>
+        <h1>User: {{ user.username }}</h1>
+        {% if user.about %}<p style="margin-bottom: 0px">About Me: {{ user.about }}</p>{% endif %}
+        {% if user.last_seen %}<p style="margin-bottom: 0px">Last seen: {{ user.last_seen }}</p>{% endif %}
+      </td>
+    </tr>
+</table>
+<hr style="margin-bottom: 0px">
+{% for post in posts %}
+    <div class="hstack border-bottom">
+      <img src={{ user.avatar(32) }} style="position: relative; top: 14px; align-self: start">
+      <div class="p-2">
+        <h5 class="card-title">{{ post.author.username }} said:</h5>
+        <p class="card-text">{{ post.body }}</p>
+      </div>
+    </div>
+{% endfor %}
+{% endblock %}

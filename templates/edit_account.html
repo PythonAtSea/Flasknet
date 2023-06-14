@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Edit Accout</h1>
+  <form method="POST" action="" novalidate>
+    {{ form.csrf_token }}
+    <div class="row">
+      <div class="form-group col-lg-2">
+        <label>{{ form.username.label }}</label>
+        {% if form.username.errors %}
+        {{ form.username(size=20, class="form-control is-invalid")}}
+        {% for error in form.username.errors %}
+        <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
+        {% else %}
+        {{ form.username(size=20, class="form-control")}}
+        {% endif %}
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-lg-2">
+        <label>{{ form.about.label }}</label>
+        {% if form.about.errors %}
+        {{ form.about(size=20, class="form-control is-invalid")}}
+        {% for error in form.about.errors %}
+        <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
+        {% else %}
+        {{ form.about(size=20, class="form-control")}}
+        {% endif %}
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-lg-2">
+        {{ form.submit(size=20, class="btn btn-primary",style="margin-top: 10px") }}
+      </div>
+    </div>
+  </form>
+
+
+{% endblock %}

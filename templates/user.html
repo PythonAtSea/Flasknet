@@ -9,7 +9,7 @@
         {% if user.about %}<p style="margin-bottom: 0px">About Me: {{ user.about }}</p>{% endif %}
         {% if user.last_seen %}<p style="margin-bottom: 0px">Last seen: {{ user.last_seen }}</p>{% endif %}
         {% if user == current_user %}
-        <p><a href="{{ url_for("edit") }}">Edit your profile</a></p>
+        <p><a href="{{ url_for("edit") }}" class="btn btn-outline-primary">Edit</a></p>
         {% elif not current_user.is_following(user) %}
         <p>
           <form action={{ url_for("follow", username=user.username) }} method="post">

@@ -1,5 +1,5 @@
 name: Format .py Code
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+run-name: ${{ github.actor }} formatting .py code
 on: [push]
 jobs:
   Black-Formater:

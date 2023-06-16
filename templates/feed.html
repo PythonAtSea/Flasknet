@@ -1,13 +1,30 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% for post in posts %}
-    <div class="hstack border-bottom">
-      <img src="https://api.dicebear.com/6.x/identicon/svg?seed={{ post.author }}&size=32" style="position: relative; top: 14px; align-self: start">
-      <div class="p-2">
-        <h5 class="card-title">{{ post.author }} said:</h5>
-        <p class="card-text">{{ post.body }}</p>
-      </div>
+<h1>Hi, {{ current_user.username }}</h1>
+{% if form %}
+<form action="" method="POST">
+  {{ form.csrf_token }}
+  <div class="row">
+    <div class="form-group col-lg-2">
+      {% if form.post.errors %}
+      {{ form.post(size=20, class="form-control is-invalid",placeholder="Say Something!")}}
+      {% for error in form.post.errors %}
+      <div class="invalid-feedback">{{ error }}</div>
+      {% endfor %}
+      {% else %}
+      {{ form.post(size=20, class="form-control",placeholder="Say Something!")}}
+      {% endif %}
     </div>
+  </div>
+  <div class="row">
+    <div class="form-group col-lg-2">
+      {{ form.submit(size=20, class="btn btn-primary", style="margin-top: 10px") }}
+    </div>
+  </div>
+</form>
+{% endif %}
+{% for post in posts %}
+{% include "_post.html" %}
 {% endfor %}
 {% endblock %}

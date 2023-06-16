@@ -19,11 +19,10 @@ posts=[
     {"author": "Sally", "body" :"why"},
 ]
 from models import User, Post
-from forms import LoginForm, RegistrationForm, EditForm
+from forms import LoginForm, RegistrationForm, EditForm, EmptyForm, PostForm
 
 
 if True:
-    print("huhwrih")
     if app.config["MAIL_SERVER"]:
         auth = None
         if app.config["MAIL_USERNAME"] or app.config["MAIL_PASSWORD"]:
@@ -35,7 +34,7 @@ if True:
             mailhost =(app.config["MAIL_SERVER"], app.config["MAIL_PORT"]),
             fromaddr="pythonatsea@gmail.com",
             toaddrs=app.config["ADMINS"], subject="Flasknet Error",
-            credential=auth, secure=secure
+            credentials=auth, secure=secure
         )
         mail_handler.setLevel(logging.INFO)
         print(mail_handler)
@@ -47,14 +46,18 @@ def index():
     if current_user.is_authenticated:
         return redirect(url_for("feed"))
     return render_template("index.html")
-@app.route("/feed")
+@app.route("/feed", methods=["POST","GET"])
 @login_required
 def feed():
-    posts=[
-        {"author": "Fred", "body" :"Hi buds"},
-        {"author": "Sally", "body" :"why"},
-    ]
-    return render_template("feed.html", posts=posts)
+    form = PostForm()
+    if form.validate_on_submit():
+        post = Post(body=form.post.data, author=current_user)
+        db.session.add(post)
+        db.session.commit()
+        flash("Your post is now live!")
+        return redirect(url_for("feed"))
+    posts=current_user.followed_posts()
+    return render_template("feed.html", posts=posts, form=form)
 @app.route("/login", methods=["GET","POST"])
 def login():
     if current_user.is_authenticated:
@@ -88,17 +91,18 @@ def signup():
 
 @app.route("/user/<username>")
 def user(username):
+    form=EmptyForm()
     user = User.query.filter_by(username=username).first_or_404()
     posts = [
         {"author": user, "body": "test #1"},
         {"author": user, "body": "test #2"},
     ]
-    return render_template("user.html", user=user, posts=posts)
+    return render_template("user.html", user=user, posts=posts, form=form)
 
 @app.route("/edit", methods=["GET","POST"])
 @login_required
 def edit():
-    form = EditForm()
+    form = EditForm(current_user.username)
     if form.validate_on_submit():
         current_user.username = form.username.data
         current_user.about = form.about.data
@@ -108,6 +112,50 @@ def edit():
         form.username.data = current_user.username
         form.about.data = current_user.about
     return render_template("edit_account.html", form=form)
+
+@app.route("/follow/<username>", methods=["GET","POST"])
+@login_required
+def follow(username):
+    form = EmptyForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=username).first()
+        if user is None:
+            flash("User not found".format(username))
+            return redirect(url_for("feed"))
+        if user == current_user:
+            flash("You can't follow yourself")
+            return redirect(url_for("feed"))
+        current_user.follow(user)
+        db.session.commit()
+        flash("You are now following {}".format(str(user.username)))
+        return redirect(url_for("user", username=username))
+    else:
+        return redirect(url_for("feed"))
+
+@app.route("/unfollow/<username>", methods=["GET","POST"])
+@login_required
+def unfollow(username):
+    form = EmptyForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=username).first()
+        if user is None:
+            flash("User not found".format(username))
+            return redirect(url_for("feed"))
+        if user == current_user:
+            flash("You can't unfollow yourself")
+            return redirect(url_for("feed"))
+        current_user.unfollow(user)
+        db.session.commit()
+        flash("You are now not following {}".format(str(user.username)))
+        return redirect(url_for("user", username=username))
+    else:
+        return redirect(url_for("feed"))
+
+@app.route("/explore")
+@login_required
+def explore():
+    posts=Post.query.all()
+    return render_template("feed.html", posts=posts)
 
 @app.before_request
 def before_request():

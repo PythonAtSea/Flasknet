@@ -4,21 +4,32 @@
 <table>
   <tr valign="top">
       <td><img src={{ user.avatar() }} style="position: relative; top: 11px; align-self: start"></td>
-      <td>
+      <td style="padding-left: 5px">
         <h1>User: {{ user.username }}</h1>
         {% if user.about %}<p style="margin-bottom: 0px">About Me: {{ user.about }}</p>{% endif %}
         {% if user.last_seen %}<p style="margin-bottom: 0px">Last seen: {{ user.last_seen }}</p>{% endif %}
+        {% if user == current_user %}
+        <p><a href="{{ url_for("edit") }}">Edit your profile</a></p>
+        {% elif not current_user.is_following(user) %}
+        <p>
+          <form action={{ url_for("follow", username=user.username) }} method="post">
+            {{ form.csrf_token }}
+            {{ form.submit(value="Follow", class="btn btn-outline-primary") }}
+          </form>
+        </p>
+        {% else %}
+        <p>
+          <form action={{ url_for("unfollow", username=user.username) }} method="post">
+            {{ form.csrf_token }}
+            {{ form.submit(value="Unollow", class="btn btn-outline-primary") }}
+          </form>
+        </p>
+        {% endif %}
       </td>
     </tr>
 </table>
 <hr style="margin-bottom: 0px">
 {% for post in posts %}
-    <div class="hstack border-bottom">
-      <img src={{ user.avatar(32) }} style="position: relative; top: 14px; align-self: start">
-      <div class="p-2">
-        <h5 class="card-title">{{ post.author.username }} said:</h5>
-        <p class="card-text">{{ post.body }}</p>
-      </div>
-    </div>
+    {% include "_post.html" %}
 {% endfor %}
 {% endblock %}

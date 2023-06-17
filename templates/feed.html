@@ -27,4 +27,18 @@
 {% for post in posts %}
 {% include "_post.html" %}
 {% endfor %}
+<nav aria-label="Page navigation example" style="margin-top: 10px;">
+  <ul class="pagination">
+    {% if prev_url %}
+    <li class="page-item"><a class="page-link" href={{ prev_url }}>&laquo; Previous Page</a></li>
+    {% else %}
+    <li class="page-item disabled"><a class="page-link" href={{ prev_url }}>&laquo; Previous Page</a></li>
+    {% endif %}
+    {% if next_url %}
+    <li class="page-item"><a class="page-link" href={{ next_url }}>Next Page &raquo;</a></li>
+    {% else %}
+    <li class="page-item disabled"><a class="page-link" href={{ next_url }}>Next Page &raquo;</a></li>
+    {% endif %}
+  </ul>
+</nav>
 {% endblock %}

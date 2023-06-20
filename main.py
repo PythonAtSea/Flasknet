@@ -6,6 +6,7 @@ from flask_login import LoginManager, current_user, login_user, logout_user, log
 from datetime import datetime
 import logging
 from logging.handlers import SMTPHandler
+from flask_mail import Mail
 
 
 app = Flask(__name__)
@@ -14,10 +15,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 login = LoginManager(app)
 login.login_view="login"
-posts=[
-    {"author": "Fred", "body" :"Hi buds"},
-    {"author": "Sally", "body" :"why"},
-]
+mail=Mail(app)
 from models import User, Post
 from forms import LoginForm, RegistrationForm, EditForm, EmptyForm, PostForm
 

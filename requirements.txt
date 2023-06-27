@@ -9,7 +9,7 @@ Flask==2.3.2
 Flask-Login==0.6.2
 Flask-Mail==0.9.1
 Flask-Migrate==4.0.4
-Flask-SQLAlchemy==3.0.4
+Flask-SQLAlchemy==3.0.5
 Flask-WTF==1.1.1
 greenlet==2.0.2
 gunicorn==20.1.0
@@ -23,7 +23,7 @@ protobuf==3.20.3
 pycparser==2.21
 PyJWT==2.7.0
 pyOpenSSL==23.2.0
-SQLAlchemy==2.0.16
+SQLAlchemy==2.0.17
 typing_extensions==4.6.3
 Werkzeug==2.3.6
 WTForms==3.0.1

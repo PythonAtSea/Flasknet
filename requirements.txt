@@ -25,5 +25,5 @@ PyJWT==2.8.0
 pyOpenSSL==23.2.0
 SQLAlchemy==2.0.19
 typing_extensions==4.7.1
-Werkzeug==2.3.6
+Werkzeug==2.3.7
 WTForms==3.0.1

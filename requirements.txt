@@ -23,7 +23,7 @@ protobuf==4.24.1
 pycparser==2.21
 PyJWT==2.8.0
 pyOpenSSL==23.2.0
-SQLAlchemy==2.0.19
+SQLAlchemy==2.0.20
 typing_extensions==4.7.1
 Werkzeug==2.3.7
 WTForms==3.0.1

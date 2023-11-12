@@ -1,64 +1,76 @@
 <!DOCTYPE html>
-<html data-bs-theme="dark">
+<html lang="en" data-bs-theme="dark">
   <head>
+    <!-- Title -->
     {% if title %}
-    <title>{{ title }} - Flasknet</title>
+      <title>{{ title }} - Flasknet</title>
     {% else %}
-    <title>Flasknet</title>
+      <title>Flasknet</title>
     {% endif %}
   </head>
   <body>
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <!-- Navigation Bar -->
     {% if not nonav %}
-    <nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom">
       <div class="container-fluid">
+        <!-- Brand -->
         <a class="navbar-brand" href={{ url_for("index") }}>Flasknet</a>
+        <!-- Toggler -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <!-- Navigation Links -->
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <!--<li class="nav-item">
-              {% if current_user.is_anonymous %}
-              <a class="nav-link active" aria-current="page" href={{ url_for("login") }}>Login</a>
-              {% else %}
-              <a class="nav-link active" aria-current="page" href={{ url_for("logout") }}>Logout</a>
-              {% endif %}
-            </li>-->
-
+            <!-- Login/Signup Links -->
             {% if not current_user.is_authenticated %}
-            <li class="nav-item">
-              <a class="nav-link" href="{{ url_for("login")}}">Login</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{{ url_for("signup")}}">Sigup</a>
-            </li>
-            {% else %}
-            <li class="nav-item">
-              <a class="nav-link" href="{{ url_for("explore") }}">Explore</a>
-            </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for("login")}}">Login</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for("signup")}}">Signup</a>
+              </li>
+              <!-- Explore Link -->
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for("explore") }}">Explore</a>
+              </li>
             {% endif %}
           </ul>
-          <!--
-          <form class="d-flex" role="search">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-primary" type="submit">Search</button>
-          </form>-->
+          <!-- User Dropdown -->
           {% if current_user.is_authenticated %}
-          <div class="dropdown">
             <button class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+              <!-- User Avatar -->
               <img src="https://api.dicebear.com/6.x/identicon/svg?seed={{ current_user.username }}&size=32">
             </button>
+            <!-- User Dropdown Menu -->
             <ul class="dropdown-menu dropdown-menu-end">
               <li><a class="dropdown-item" href={{ url_for("user", username=current_user.username) }}>Profile</a></li>
               <li><a class="dropdown-item" href="{{ url_for("logout") }}">Logout</a></li>
               <li><a class="dropdown-item" href="{{ url_for("edit") }}">Edit Profile</a></li>
             </ul>
-          </div>
+            </div>
           {% endif %}
-        </div>
-      </div>
+    <!-- Main Content -->
+    <div class="container-fluid">
+      <!-- Flash Messages -->
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          {% for message in messages %}
+            <div style="padding-top: 10px">
+              <div class="alert alert-primary" role="alert">
+                {{ message }}
+              </div>
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      <!-- Page Content -->
+      {% block content %}{% endblock %}
+    </div>
+  </body>
+</html>
     </nav>
     {% endif %}
     <!-- end navbar -->

@@ -4,8 +4,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
 from datetime import datetime
-import logging
-from logging.handlers import SMTPHandler
 from flask_mail import Mail
 
 
@@ -20,23 +18,7 @@ from models import User, Post
 from forms import LoginForm, RegistrationForm, EditForm, EmptyForm, PostForm
 
 
-if True:
-    if app.config["MAIL_SERVER"]:
-        auth = None
-        if app.config["MAIL_USERNAME"] or app.config["MAIL_PASSWORD"]:
-            auth = (app.config["MAIL_USERNAME"], app.config["MAIL_PASSWORD"])
-        secure = None
-        if app.config["MAIL_USE_TLS"]:
-            secure=()
-        mail_handler = SMTPHandler(
-            mailhost =(app.config["MAIL_SERVER"], app.config["MAIL_PORT"]),
-            fromaddr="pythonatsea@gmail.com",
-            toaddrs=app.config["ADMINS"], subject="Flasknet Error",
-            credentials=auth, secure=secure
-        )
-        mail_handler.setLevel(logging.INFO)
-        print(mail_handler)
-        app.logger.addHandler(mail_handler)
+# Removed redundant code
 
 
 @app.route("/")
@@ -83,7 +65,34 @@ def unfollow_user(username):
     db.session.commit()
     flash("You are now not following {}".format(str(user.username)))
     return True
-    return render_template("index.html")
+
+
+
+@app.before_request
+def before_request():
+    if current_user.is_authenticated:
+        current_user.last_seen = datetime.utcnow()
+        db.session.commit()
+
+@app.errorhandler(404)
+def not_found_error(error):
+    return render_template("404.html")
+
+@app.errorhandler(500)
+def internal_server_error(error):
+    return render_template("500.html")
+def unfollow_user(username):
+    user = User.query.filter_by(username=username).first()
+    if user is None:
+        flash("User not found".format(username))
+        return False
+    if user == current_user:
+        flash("You can't unfollow yourself")
+        return False
+    current_user.unfollow(user)
+    db.session.commit()
+    flash("You are now not following {}".format(str(user.username)))
+    return True
 @app.route("/feed", methods=["POST","GET"])
 @login_required
 def feed():
@@ -177,9 +186,7 @@ def user(username):
     return render_template("user.html", user=user, posts=posts, form=form, next_url=next_url, prev_url=prev_url)
 
 @app.route("/edit", methods=["GET","POST"])
-@login_required
-def edit():
-    form = EditForm(current_user.username)
+# Removed redundant code
     if form.validate_on_submit():
         update_user(form)
         return redirect(url_for("user", username=current_user.username))
@@ -202,7 +209,6 @@ def get_user_posts(username, page):
     next_url = url_for('user', username=username,page=posts.next_num) if posts.has_next else None
     prev_url = url_for('user', username=username, page=posts.prev_num) if posts.has_prev else None
     return user, posts.items, next_url, prev_url
-@login_required
 def edit():
     form = EditForm(current_user.username)
     if form.validate_on_submit():

@@ -24,6 +24,6 @@ pycparser==2.21
 PyJWT==2.8.0
 pyOpenSSL==23.2.0
 SQLAlchemy==2.0.21
-typing_extensions==4.7.1
+typing_extensions==4.8.0
 Werkzeug==3.0.1
 WTForms==3.0.1

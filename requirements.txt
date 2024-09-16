@@ -1,5 +1,5 @@
 alembic==1.13.1
-blinker==1.7.0
+blinker==1.8.2
 cffi==1.16.0
 click==8.1.7
 cryptography==43.0.1
